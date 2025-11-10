@@ -1,0 +1,28 @@
+# Archivos de Sistema Operativo
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependencias (NUNCA subir)
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Archivos de entorno (¡Contiene SECRETOS!)
+.env
+backend/.env
+frontend/.env
+
+# Archivos de build del frontend
+frontend/dist
+frontend/.vite
+
+# Archivos de Prisma
+backend/prisma/dev.db
+backend/prisma/dev.db-journal

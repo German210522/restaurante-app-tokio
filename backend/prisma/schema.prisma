@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL") // Carga la URL desde tu archivo .env
+}
+
+// --- MODELOS DE LA APLICACIÓN ---
+
+// Modelo para las Mesas del restaurante
+model Table {
+  id           Int      @id @default(autoincrement())
+  table_number Int      @unique // Número de mesa
+  capacity     Int      // Capacidad de personas
+  location     String?  // Ubicación (e.g., "terraza", "interior")
+
+  // Relación: Una mesa puede tener muchas reservas
+  reservations Reservation[]
+}
+
+// Modelo para los Clientes
+model Client {
+  id    Int     @id @default(autoincrement())
+  name  String
+  phone String  @unique // Teléfono único para identificar
+  email String?
+
+  loyalty_points Int @default(0) // Nuevo campo para guardar puntos
+  // Relación: Un cliente puede tener muchas reservas
+  reservations Reservation[]
+}
+
+// Modelo para las Reservas (el núcleo)
+model Reservation {
+  id         Int      @id @default(autoincrement())
+  party_size Int      // Número de personas
+  start_time DateTime // Fecha y hora de inicio
+  end_time   DateTime // Fecha y hora de fin
+
+  // Status de la reserva
+  status String @default("confirmed") // "confirmed", "cancelled", "completed"
+
+  // Puntos que esta reserva generó
+  points_earned Int @default(0)
+
+  // Guarda la fecha y hora de archivado
+  archived_at DateTime?
+
+  // Relación con Cliente
+  client_id Int
+  client    Client @relation(fields: [client_id], references: [id])
+
+  // Relación con Mesa
+  table_id Int
+  table    Table @relation(fields: [table_id], references: [id])
+
+  @@index([client_id])
+  @@index([table_id])
+}
+// --- NUEVO MODELO PARA AUTENTICACIÓN ---
+model User {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique // El "email" o "usuario" para loguearse
+  passwordHash String   // La contraseña encriptada
+
+  @@map("users") // Mapea a una tabla llamada "users"
+}
+
+// Modelo para los Horarios del Negocio (Requerimiento)
+model BusinessHours {
+  id          Int     @id @default(autoincrement())
+  day_of_week Int     // 0=Domingo, 1=Lunes, ..., 6=Sábado
+  open_time   String  // Formato "HH:MM" (e.g., "09:00")
+  close_time  String  // Formato "HH:MM" (e.g., "22:00")
+}
