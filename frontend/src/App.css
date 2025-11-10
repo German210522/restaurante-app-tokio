@@ -350,3 +350,95 @@
 }
 .archive-item p { color: #888; }
 .archive-item strong { color: var(--text-secondary); text-decoration: line-through; }
+
+/* --- ============================ --- */
+/* --- ESTILOS PARA CLIENTE DESTACADO --- */
+/* --- ============================ --- */
+
+.highlight-card {
+  background: linear-gradient(135deg, var(--tokio-brown-dark) 0%, var(--bg-secondary) 100%);
+  border: 1px solid var(--accent-primary);
+  border-radius: 12px;
+  padding: 30px;
+  margin-top: 40px;
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  box-shadow: 0 0 20px rgba(160, 122, 104, 0.2);
+}
+
+.highlight-card .trophy {
+  font-size: 4.5em;
+  line-height: 1;
+  filter: drop-shadow(0 0 10px var(--accent-warn));
+}
+
+.highlight-card-content h2 {
+  color: var(--tokio-beige);
+  margin: 0 0 5px 0;
+  padding: 0;
+  border: none;
+  font-size: 1.2em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.highlight-card-content h3 {
+  color: var(--text-primary);
+  margin: 0;
+  font-size: 2em;
+}
+
+.highlight-card-content p {
+  color: var(--accent-warn);
+  font-size: 1.8em;
+  font-weight: bold;
+  margin: 0;
+}
+.highlight-card-content p span {
+  font-size: 0.7em;
+  color: var(--text-secondary);
+}
+/* --- ============================ --- */
+/* --- NUEVOS ESTILOS DASHBOARD FLEX --- */
+/* --- ============================ --- */
+
+.dashboard-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Centra verticalmente */
+  gap: 25px;
+  flex-wrap: wrap; /* Si no caben, se pone abajo */
+  margin-bottom: 20px; /* Separación de las stat cards */
+}
+
+.header-text {
+  flex-grow: 1; /* Ocupa el espacio disponible */
+}
+
+/* --- MODIFICADOR: Panel Destacado Pequeño --- */
+.highlight-card.small {
+  margin-top: 0; /* Quita el margen superior que tenía */
+  padding: 15px 25px; /* Relleno más pequeño */
+  gap: 15px; /* Espacio interno más pequeño */
+  flex-grow: 0; /* No debe crecer */
+  flex-shrink: 0; /* No debe encogerse */
+  min-width: 300px; /* Un ancho base */
+}
+
+.highlight-card.small .trophy {
+  font-size: 3em; /* Icono más pequeño */
+}
+
+.highlight-card.small .highlight-card-content h2 {
+  font-size: 0.9em; /* Título "Cliente Destacado" más pequeño */
+  margin-bottom: 2px;
+}
+
+.highlight-card.small .highlight-card-content h3 {
+  font-size: 1.4em; /* Nombre del cliente más pequeño */
+}
+
+.highlight-card.small .highlight-card-content p {
+  font-size: 1.3em; /* Puntos más pequeños */
+}

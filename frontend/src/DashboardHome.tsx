@@ -1,47 +1,88 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-// Interface para las estadísticas
+// --- Interfaces ---
 interface DashboardStats {
   totalClients: number;
   totalTables: number;
   todayReservations: number;
   upcomingReservations: number;
 }
+interface TopClient {
+  name: string;
+  loyalty_points: number;
+}
 
-// Props para los botones de acción
 interface DashboardHomeProps {
   onNavigate: (view: 'reservar' | 'ver_reservas' | 'reportes') => void;
   username: string;
 }
 
-const API_URL = 'http://localhost:5000/api/dashboard/stats';
+const STATS_API_URL = 'http://localhost:5000/api/dashboard/stats';
+const TOP_CLIENT_API_URL = 'http://localhost:5000/api/reports/top-client';
 
 function DashboardHome({ onNavigate, username }: DashboardHomeProps) {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [error, setError] = useState('');
+  const [topClient, setTopClient] = useState<TopClient | null>(null);
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await axios.get(API_URL);
+        const response = await axios.get(STATS_API_URL);
         setStats(response.data);
       } catch (err) {
         console.error("Error al cargar estadísticas:", err);
         setError('No se pudieron cargar las estadísticas.');
       }
     };
+    
+    const fetchTopClient = async () => {
+      try {
+        const response = await axios.get(TOP_CLIENT_API_URL);
+        setTopClient(response.data);
+      } catch (err) {
+        console.error("Error al cargar cliente destacado:", err);
+      }
+    };
+
     fetchStats();
+    fetchTopClient();
   }, []);
 
   return (
     <div className="dashboard-home">
-      <h1>Bienvenido de nuevo, <span>{username}</span>.</h1>
-      <p className="subtitle">Este es el resumen de tu restaurante.</p>
+      
+      {/* --- ============================ --- */}
+      {/* --- ESTRUCTURA DE HEADER MODIFICADA --- */}
+      {/* --- ============================ --- */}
+      <div className="dashboard-header-flex">
+        
+        {/* 1. Texto de Bienvenida */}
+        <div className="header-text">
+          <h1>Bienvenido de nuevo, <span>{username}</span>.</h1>
+          <p className="subtitle">Este es el resumen de tu restaurante.</p>
+        </div>
+
+        {/* 2. Cliente Destacado (Movido aquí) */}
+        {topClient && (
+          // Añadimos la clase 'small'
+          <div className="highlight-card small"> 
+            <div className="trophy">🏆</div>
+            <div className="highlight-card-content">
+              <h2>Cliente Destacado</h2>
+              <h3>{topClient.name}</h3>
+              <p>{topClient.loyalty_points} <span>puntos</span></p>
+            </div>
+          </div>
+        )}
+      </div>
+      {/* --- FIN DE ESTRUCTURA FLEX --- */}
+
 
       {error && <p className="message-error">{error}</p>}
 
-      {/* --- Tarjetas de Estadísticas --- */}
+      {/* --- Tarjetas de Estadísticas (Ahora van después) --- */}
       <div className="stat-card-container">
         <div className="stat-card">
           <h3 className="stat-card-title">Reservas para Hoy</h3>
@@ -63,7 +104,7 @@ function DashboardHome({ onNavigate, username }: DashboardHomeProps) {
 
       <hr style={{ margin: '40px 0', borderColor: '#333' }} />
 
-      {/* --- Botones de Acción Rápida --- */}
+      {/* --- Accesos Rápidos (Sin cambios) --- */}
       <h2>Accesos Rápidos</h2>
       <div className="quick-actions">
         <button className="quick-action-btn" onClick={() => onNavigate('reservar')}>

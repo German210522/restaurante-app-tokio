@@ -664,6 +664,40 @@ app.put('/api/reservations/:id/check-in', authMiddleware, async (req, res) => {
 });
 
 // --- ================================== ---
+// ---   NUEVA API: CLIENTE DESTACADO     ---
+// --- ================================== ---
+
+/**
+ * @route   GET /api/reports/top-client
+ * @desc    Encuentra al cliente con más puntos de lealtad
+ */
+app.get('/api/reports/top-client', authMiddleware, async (req, res) => {
+  console.log('Petición GET /api/reports/top-client');
+
+  try {
+    // 1. Buscar al cliente con más puntos
+    //    Usamos 'findFirst' con 'orderBy' descendente.
+    const topClient = await prisma.client.findFirst({
+      where: {
+        loyalty_points: {
+          gt: 0 // Solo considerar clientes que tengan al menos 1 punto
+        }
+      },
+      orderBy: {
+        loyalty_points: 'desc' // 'desc' = descendente (el más alto primero)
+      }
+    });
+
+    // 2. Enviar el cliente (o 'null' si nadie tiene puntos)
+    res.status(200).json(topClient);
+
+  } catch (error) {
+    console.error("Error al generar cliente destacado:", error);
+    res.status(500).json({ error: 'Error interno del servidor.' });
+  }
+});
+
+// --- ================================== ---
 // ---       INICIAR EL SERVIDOR          ---
 // --- ================================== ---
 httpServer.listen(PORT, () => {
